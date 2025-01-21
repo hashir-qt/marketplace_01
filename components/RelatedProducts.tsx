@@ -56,7 +56,7 @@ export default function RelatedProducts({ categoryName, currentSlug }: RelatedPr
               />
             </div>
             <div className="flex justify-between"> <p className="mt-2 text-sm text-gray-700">{relatedProduct.name}</p>
-            <p className="mt-2 text-sm font-bold text-gray-900">${relatedProduct.price.toFixed(2)}</p></div>
+            <p className="mt-2 text-sm font-medium text-gray-900">${relatedProduct.price.toFixed(2)}</p></div>
            
             <p className="mt-1 text-sm text-gray-500">
                     {relatedProduct.categoryName}

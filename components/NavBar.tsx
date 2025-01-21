@@ -13,6 +13,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useCart } from "@/components/CartContext"; // Import the useCart hook
 
 const links = [
   { name: "Pots", href: "/Pots" },
@@ -27,6 +28,7 @@ const links = [
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { cart } = useCart(); // Get cart from context
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -37,6 +39,8 @@ export default function Navbar() {
       setIsSearchOpen(false);
     }
   };
+
+  const cartItemCount = cart.reduce((acc, item) => acc + item.quantity, 0); // Calculate total items in the cart
 
   return (
     <nav className="border-b">
@@ -70,7 +74,16 @@ export default function Navbar() {
           </div>
           <div className="hidden md:flex items-center space-x-4">
             <Button variant="ghost" size="icon">
-              <ShoppingCart className="h-5 w-5" />
+              <Link href="/cart">
+                <div className="relative">
+                  <ShoppingCart  />
+                  {cartItemCount > 0 && (
+                    <span className="absolute bottom-3 left-3 text-[8px] font-bold rounded-full text-white bg-red-600 px-2">
+                      {cartItemCount}
+                    </span>
+                  )}
+                </div>
+              </Link>
             </Button>
             <Button variant="ghost" size="icon">
               <UserCircle className="h-5 w-5" />
@@ -86,7 +99,16 @@ export default function Navbar() {
               <Search className="h-5 w-5" />
             </Button>
             <Button variant="ghost" size="icon">
-              <ShoppingCart className="h-5 w-5" />
+              <Link href="/cart">
+                <div className="relative">
+                  <ShoppingCart  />
+                  {cartItemCount > 0 && (
+                    <span className="absolute bottom-3 left-3 text-[8px] font-bold rounded-full text-white bg-red-600 px-2">
+                      {cartItemCount}
+                    </span>
+                  )}
+                </div>
+              </Link>
             </Button>
             <Sheet>
               <SheetTrigger asChild>
@@ -99,27 +121,27 @@ export default function Navbar() {
                   <SheetTitle>Menu</SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-96">
-                <div className="mt-6 flex flex-col space-y-4">
-                  <h1 className="text-2xl">Categories</h1>
-                  {links.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className={`text-base ${
-                        pathname === link.href
-                          ? "font-semibold text-blue-950"
-                          : "font-medium text-gray-600 hover:text-gray-900"
-                      }`}
-                    >
-                      {link.name}
-                    </Link>
-                  ))}
-                </div>
-                <div className="flex flex-col  space-y-4">
-                <UserCircle/>
-                <Link href="/about" className="text-gray-600 border-b border-spacing-1 hover:text-gray-900">About Us</Link>
-                  <Link href="/contact" className="text-gray-600 border-b border-spacing-1 hover:text-gray-900">Contact</Link>
-                  <Link href="/blog" className="text-gray-600 border-b border-spacing-1 hover:text-gray-900">Blog</Link>
+                  <div className="mt-6 flex flex-col space-y-4">
+                    <h1 className="text-2xl">Categories</h1>
+                    {links.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className={`text-base ${
+                          pathname === link.href
+                            ? "font-semibold text-blue-950"
+                            : "font-medium text-gray-600 hover:text-gray-900"
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    ))}
+                  </div>
+                  <div className="flex flex-col  space-y-4">
+                    <UserCircle />
+                    <Link href="/about" className="text-gray-600 border-b border-spacing-1 hover:text-gray-900">About Us</Link>
+                    <Link href="/contact" className="text-gray-600 border-b border-spacing-1 hover:text-gray-900">Contact</Link>
+                    <Link href="/blog" className="text-gray-600 border-b border-spacing-1 hover:text-gray-900">Blog</Link>
                   </div>
                 </div>
               </SheetContent>
@@ -143,7 +165,6 @@ export default function Navbar() {
             </Link>
           ))}
         </div>
-       
       </div>
       {isSearchOpen && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
@@ -172,7 +193,6 @@ export default function Navbar() {
           </div>
         </div>
       )}
-
     </nav>
   );
 }

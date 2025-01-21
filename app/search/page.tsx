@@ -81,6 +81,7 @@ export default function SearchResults() {
                   <Image
                     src={product.imageUrl || "/placeholder.svg"}
                     alt={product.name}
+                    priority
                     className="w-full h-full object-cover object-center"
                     width={300}
                     height={300}

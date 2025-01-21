@@ -17,5 +17,17 @@ export interface simplifiedProduct {
     categoryName: string;
     name: string;
     description: string;
-    price_id: string;
+    quantity: number;
   }
+  export interface CartItem {
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+    imageUrl: string;
+   
+  }
+
+
+  
+ 

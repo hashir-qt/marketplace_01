@@ -117,6 +117,7 @@ export default function AllProducts() {
                   <Image
                     src={product.imageUrl}
                     alt={product.name}
+                    priority
                     className="w-full h-full object-cover object-center"
                     width={300}
                     height={300}

@@ -48,6 +48,7 @@ export default async function Newest() {
                 <Image
                   src={product.imageUrl}
                   alt="Product image"
+                  priority
                   className="w-full h-full object-cover object-center lg:h-full lg:w-full"
                   width={300}
                   height={300}

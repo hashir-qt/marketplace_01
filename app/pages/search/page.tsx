@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import { client } from "@/sanity/lib/client"
+import { client } from "@/lib/client"
 import { simplifiedProduct } from "@/app/interface"
 import Image from "next/image"
 import Link from "next/link"

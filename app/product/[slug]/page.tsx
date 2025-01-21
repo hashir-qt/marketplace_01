@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Star, Truck } from 'lucide-react';
 import Image from "next/image";
 import Link from "next/link";
-import { client } from "@/sanity/lib/client";
+import { client } from "@/lib/client";
 import RelatedProducts from "@/components/RelatedProducts"; // Import the new component
 import { fullProduct } from "@/app/interface";
 import { useCart } from "@/components/CartContext";

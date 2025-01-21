@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { client, urlFor } from '@/sanity/lib/client'
+import { client, urlFor } from '@/lib/client'
 import NewArrivals from './NewArrivals'
 import Link from 'next/link'
 

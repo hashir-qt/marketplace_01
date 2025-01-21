@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { simplifiedProduct } from "@/app/interface";
-import { client } from "@/sanity/lib/client";
+import { client } from "@/lib/client";
 
 async function getData() {
   const query = `*[_type == "product"][0...4] | order(_createdAt desc) {

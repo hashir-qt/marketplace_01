@@ -56,7 +56,7 @@ const Footer = () => {
                         className={`text-base ${
                           pathname === link.href
                             ? "font-semibold text-gray-400"
-                            : "font-medium text-gray-100 hover:text-gray-600"
+                            : "font-medium text-gray-100 hover:text-white"
                         }`}
                       >
                         {link.name}

@@ -21,7 +21,7 @@ import { useCart } from "@/components/CartContext"
 import { Toaster } from "@/components/ui/toaster"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { CheckCheck, CreditCard, ShoppingCart, Truck } from 'lucide-react'
+import { CreditCard, ShoppingCart, Truck } from 'lucide-react'
 import { useToast } from "@/hooks/use-toast"
 
 const formSchema = z.object({

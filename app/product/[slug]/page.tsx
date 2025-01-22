@@ -9,7 +9,7 @@ import { client } from "@/lib/client";
 import RelatedProducts from "@/components/RelatedProducts"; // Import the new component
 import { fullProduct } from "@/app/interface";
 import { useCart } from "@/components/CartContext";
-import { useToast } from "@/hooks/use-toast";
+
 
 async function getProductData(slug: string) {
   const query = `{
@@ -36,7 +36,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   const [quantity, setQuantity] = useState(1); // Quantity for the current product
   const { cart, addToCart } = useCart();
 
-  const { toast } = useToast();
+
 
   // Fetch product data on initial load and when slug changes
   useEffect(() => {

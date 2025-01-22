@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CartItem } from "../interface";
 import { useRouter } from "next/navigation";
-
+import { ChevronUp, ChevronDown } from "lucide-react"; // Importing the arrow icons
 
 export default function CartPage() {
   const { cart, removeFromCart, clearCart, updateQuantity } = useCart();
@@ -15,17 +15,15 @@ export default function CartPage() {
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const router = useRouter();
 
-
   // Check if the cart has items
   const handleCheckoutClick = () => {
     if (cart.length > 0) {
-      router.push('/checkout'); // Redirect to the checkout page
+      router.push("/checkout"); // Redirect to the checkout page
     } else {
       // Optionally, show a message if the cart is empty
       alert("Your cart is empty. Please add items to the cart.");
     }
   };
-
 
   // If the cart is empty, show a message
   if (cart.length === 0) {
@@ -67,7 +65,7 @@ export default function CartPage() {
                 alt={item.name}
                 width={100}
                 height={100}
-                className="w-[100px] h-[100px] rounded-lg object-center object-cover "
+                className="w-[100px] h-[100px] rounded-lg object-center object-cover"
               />
               <div>
                 <h3 className="text-lg font-medium">{item.name}</h3>
@@ -76,31 +74,35 @@ export default function CartPage() {
             </div>
 
             <div className="flex items-center gap-4">
+             
+              <span className="font-bold">{item.quantity}</span>
+              <div className=" flex flex-col ">
+                 <Button
+                onClick={() => handleIncrement(item)}
+                className="bg-gray-200 h-[15px] w-[12px] text-gray-800 hover:bg-gray-300"
+              >
+                <ChevronUp className="h-5 w-5" />
+              </Button>
               <Button
                 onClick={() => handleDecrement(item)}
-                className="bg-gray-200 text-gray-800 hover:bg-gray-300"
+                className="bg-gray-200 h-[15px] w-[12px] text-gray-800 hover:bg-gray-300"
                 disabled={item.quantity === 1}
               >
-                -
+                <ChevronDown className="h-5 w-5" />
               </Button>
-              <span className="font-bold">{item.quantity}</span>
-              <Button
-                onClick={() => handleIncrement(item)}
-                className="bg-gray-200 text-gray-800 hover:bg-gray-300"
-              >
-                +
-              </Button>
+              </div>
+             
             </div>
 
             <div>
-              <p className="font-bold">
+              <p className="font-bold ml-10">
                 ${(item.price * item.quantity).toFixed(2)}
               </p>
               <Button
                 onClick={() => removeFromCart(item.id)}
                 className="text-red-500 bg-transparent hover:bg-transparent hover:underline mt-2"
               >
-                Remove
+                Remove from Cart
               </Button>
             </div>
           </div>
@@ -124,7 +126,9 @@ export default function CartPage() {
           </Button>
           <Button
             className={`${
-              cart.length === 0 ? "bg-gray-300 text-gray-600" : "bg-green-500 text-white hover:bg-green-600"
+              cart.length === 0
+                ? "bg-gray-300 text-gray-600"
+                : "bg-green-500 text-white hover:bg-green-600"
             }`}
             disabled={cart.length === 0}
             onClick={handleCheckoutClick}

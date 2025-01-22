@@ -264,7 +264,7 @@ export default function CheckoutPage() {
                   <div key={item.id} className="flex justify-between items-center mb-2">
                     <div className="flex items-center gap-2">
                       <Image
-                        src={item.imageUrl || "/placeholder.png"}
+                        src={item.imageUrl}
                         alt={item.name}
                         width={40}
                         height={40}

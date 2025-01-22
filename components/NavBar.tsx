@@ -120,7 +120,7 @@ export default function Navbar() {
                 <SheetHeader>
                   <SheetTitle>Menu</SheetTitle>
                 </SheetHeader>
-                <div className="flex flex-col gap-96">
+                <div className="flex flex-col gap-20">
                   <div className="mt-6 flex flex-col space-y-4">
                     <h1 className="text-2xl">Categories</h1>
                     {links.map((link) => (

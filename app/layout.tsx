@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/NavBar";
 import { CartProvider } from "@/components/CartContext";
+import Footer from "@/components/Footer";
 
 
 const poppins = Poppins({ 
@@ -28,6 +29,7 @@ export default function RootLayout({
        <main  className="mx-auto max-w-2xl py-5 px-4 sm:px-6 lg:max-w-7xl">
          {children}
          </main>
+         <Footer/>
          </CartProvider>
       </body>
     </html>

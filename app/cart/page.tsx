@@ -6,12 +6,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { CartItem } from "../interface";
 import { useRouter } from "next/navigation";
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 export default function CartPage() {
   const { cart, removeFromCart, clearCart, updateQuantity } = useCart();
-  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const router = useRouter();
+
+  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   const handleCheckoutClick = () => {
     if (cart.length > 0) {
@@ -19,6 +20,16 @@ export default function CartPage() {
     } else {
       alert("Your cart is empty. Please add items to the cart.");
     }
+  };
+
+  const handleDecrement = (item: CartItem) => {
+    if (item.quantity > 1) {
+      updateQuantity(item.id, item.quantity - 1);
+    }
+  };
+
+  const handleIncrement = (item: CartItem) => {
+    updateQuantity(item.id, item.quantity + 1);
   };
 
   if (cart.length === 0) {
@@ -31,16 +42,6 @@ export default function CartPage() {
       </div>
     );
   }
-
-  const handleDecrement = (item: CartItem) => {
-    if (item.quantity > 1) {
-      updateQuantity(item.id, item.quantity - 1);
-    }
-  };
-
-  const handleIncrement = (item: CartItem) => {
-    updateQuantity(item.id, item.quantity + 1);
-  };
 
   return (
     <div className="container mx-auto p-4 sm:p-6">
@@ -75,6 +76,7 @@ export default function CartPage() {
                 >
                   <ChevronUp className="h-4 w-4" />
                 </Button>
+
                 <Button
                   onClick={() => handleDecrement(item)}
                   className="bg-gray-200 h-8 w-8 sm:h-6 sm:w-6 text-gray-800 hover:bg-gray-300"

@@ -40,7 +40,8 @@ export default function Navbar() {
     }
   };
 
-  const cartItemCount = cart.reduce((acc, item) => acc + item.quantity, 0); // Calculate total items in the cart
+  // Calculate the total number of unique products in the cart
+  const cartItemCount = cart.length; // Count the number of unique products in the cart
 
   return (
     <nav className="border-b">
@@ -127,17 +128,13 @@ export default function Navbar() {
                       <Link
                         key={link.href}
                         href={link.href}
-                        className={`text-base ${
-                          pathname === link.href
-                            ? "font-semibold text-blue-950"
-                            : "font-medium text-gray-600 hover:text-gray-900"
-                        }`}
+                        className={`text-base ${pathname === link.href ? "font-semibold text-blue-950" : "font-medium text-gray-600 hover:text-gray-900"}`}
                       >
                         {link.name}
                       </Link>
                     ))}
                   </div>
-                  <div className="flex flex-col  space-y-4">
+                  <div className="flex flex-col space-y-4">
                     <UserCircle />
                     <Link href="/about" className="text-gray-600 border-b border-spacing-1 hover:text-gray-900">About Us</Link>
                     <Link href="/contact" className="text-gray-600 border-b border-spacing-1 hover:text-gray-900">Contact</Link>
@@ -155,11 +152,7 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-base ${
-                pathname === link.href
-                  ? "font-semibold text-blue-950"
-                  : "font-medium text-gray-600 hover:text-gray-900"
-              }`}
+              className={`text-base ${pathname === link.href ? "font-semibold text-blue-950" : "font-medium text-gray-600 hover:text-gray-900"}`}
             >
               {link.name}
             </Link>

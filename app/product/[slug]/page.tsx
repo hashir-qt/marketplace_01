@@ -10,7 +10,6 @@ import RelatedProducts from "@/components/RelatedProducts"; // Import the new co
 import { fullProduct } from "@/app/interface";
 import { useCart } from "@/components/CartContext";
 
-
 async function getProductData(slug: string) {
   const query = `{
     "product": *[_type == "product" && slug.current == "${slug}"][0] {
@@ -35,8 +34,6 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   const [productData, setProductData] = useState<{ product: fullProduct } | null>(null);
   const [quantity, setQuantity] = useState(1); // Quantity for the current product
   const { cart, addToCart } = useCart();
-
-
 
   // Fetch product data on initial load and when slug changes
   useEffect(() => {
@@ -72,40 +69,36 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
     );
   }
 
-  // Function to handle adding to cart (only once)
+  // Function to handle adding to cart
   const handleAddToCart = () => {
-    // Check if item already exists in cart
     const existingItem = cart.find((item) => item.id === product._id);
 
     if (!existingItem) {
-      // If item is not in the cart, add it
       addToCart({
         id: product._id,
         name: product.name,
         price: product.price,
-        quantity: 1, // Always add 1 item to the cart
+        quantity, // Use the updated quantity state
         imageUrl: product.imageUrl,
       });
-      alert("Added to cart successfully")
+      alert("Added to cart successfully");
     } else {
       alert("This item is already in the cart.");
     }
   };
- 
 
+  // Functions to adjust quantity
   const increaseQuantity = () => {
     if (quantity < product.quantity) {
       setQuantity((prev) => prev + 1);
+    } else {
+      alert("Maximum quantity reached.");
     }
   };
 
   const decreaseQuantity = () => {
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-
-   
   };
-
-
 
   return (
     <div className="mb-12">
@@ -142,6 +135,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               </Button>
               <span className="text-sm text-gray-500">56 Ratings</span>
             </div>
+
             <div className="flex items-center gap-4 mb-4">
               <Button
                 onClick={decreaseQuantity}

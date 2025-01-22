@@ -75,8 +75,8 @@ export default function AllProducts() {
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
             All Products
           </h2>
-          <div className="flex space-x-4">
-            <div className="w-44">
+          <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+            <div className="w-full  sm:w-44">
               <Select onValueChange={(value) => setSelectedCategory(value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Categories" />
@@ -93,7 +93,7 @@ export default function AllProducts() {
               </Select>
             </div>
 
-            <div className="w-44">
+            <div className="w-full sm:w-44 ">
               <Select onValueChange={(value) => setSortOption(value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Sort by" />

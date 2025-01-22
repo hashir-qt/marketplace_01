@@ -1,7 +1,7 @@
 'use client';
 
+import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import { client } from '@/lib/client';
 import { simplifiedProduct } from '@/app/interface';
 import Image from 'next/image';
@@ -28,9 +28,7 @@ async function fetchSearchResults(searchTerm: string): Promise<simplifiedProduct
   }
 }
 
-export default function SearchResults() {
-  const searchParams = useSearchParams();
-  const query = searchParams.get('query') || ''; // Default empty string if no query
+function SearchResultsContent({ query }: { query: string }) {
   const [results, setResults] = useState<simplifiedProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -110,5 +108,16 @@ export default function SearchResults() {
         </p>
       )}
     </div>
+  );
+}
+
+export default function SearchResultsPage() {
+  const searchParams = useSearchParams();
+  const query = searchParams.get('query') || ''; // Default empty string if no query
+
+  return (
+    <Suspense fallback={<div className="text-center text-gray-500">Loading...</div>}>
+      <SearchResultsContent query={query} />
+    </Suspense>
   );
 }

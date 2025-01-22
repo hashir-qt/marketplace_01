@@ -19,7 +19,7 @@ async function fetchSearchResults(searchTerm: string): Promise<simplifiedProduct
     "categoryName": category->name,
     "imageUrl": image.asset->url
   }`;
-  
+
   try {
     return await client.fetch<simplifiedProduct[]>(searchQuery, { searchTerm: `*${searchTerm}*` });
   } catch (error) {

@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 
 
 const poppins = Poppins({ 
-  weight:'500', subsets: ["latin"]});
+  weight:'500', subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,16 +21,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${poppins.className} antialiased`}
-      >
+      <body className={`${poppins.className} antialiased`}>
         <CartProvider>
-         <Navbar/>
-       <main  className="mx-auto max-w-2xl py-5 px-4 sm:px-6 lg:max-w-7xl">
-         {children}
-         </main>
-         <Footer/>
-         </CartProvider>
+          <Navbar />
+          <main className="mx-auto max-w-2xl py-5 px-4 sm:px-6 lg:max-w-7xl">
+            {children}
+          </main>
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   );

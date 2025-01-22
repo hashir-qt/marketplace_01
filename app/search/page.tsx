@@ -1,4 +1,3 @@
-// app/search/SearchResults.tsx
 'use client';
 
 import { useSearchParams } from 'next/navigation';
@@ -31,7 +30,7 @@ async function fetchSearchResults(searchTerm: string): Promise<simplifiedProduct
 
 export default function SearchResults() {
   const searchParams = useSearchParams();
-  const query = searchParams.get('query') || '';
+  const query = searchParams.get('query') || ''; // Default empty string if no query
   const [results, setResults] = useState<simplifiedProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -45,6 +44,7 @@ export default function SearchResults() {
           const data = await fetchSearchResults(query);
           setResults(data);
         } catch (err) {
+          console.error('Error fetching search results:', err); // Log error details
           setError('An error occurred while fetching results. Please try again.');
         } finally {
           setIsLoading(false);
@@ -97,13 +97,9 @@ export default function SearchResults() {
                       {product.name}
                     </Link>
                   </h3>
-                  <p className="mt-1 text-sm text-gray-500">
-                    {product.categoryName}
-                  </p>
+                  <p className="mt-1 text-sm text-gray-500">{product.categoryName}</p>
                 </div>
-                <p className="text-sm font-medium text-gray-900">
-                  ${product.price}
-                </p>
+                <p className="text-sm font-medium text-gray-900">${product.price}</p>
               </div>
             </div>
           ))}

@@ -1,154 +1,67 @@
-# Products and Category Schema Report
+# Avion - E-Commerce Web Application
 
-## 1. Introduction
+Welcome to **Avion**, an e-commerce web application that allows users to browse, add items to the cart, and complete the checkout process seamlessly. This application features a modern UI, a shopping cart, and integration with Sanity for content management.
 
-This report outlines the details of the products and category schemas fetched from an external API and subsequently posted to Sanity CMS. The report covers the schema structure, API data mapping, and implementation steps.
+## Table of Contents
 
-## 2. API Data Fetching
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Environment Variables](#environment-variables)
+- [Usage](#usage)
+- [Folder Structure](#folder-structure)
+- [Contributing](#contributing)
+- [License](#license)
 
-### 2.1 API Overview
+## Features
 
-- **API Endpoint:** [https://hackathon-apis.vercel.app/api/products](https://hackathon-apis.vercel.app/api/products)
-- **Purpose:** Fetch product and category data.
-- **Response Example:**
-  ```json
-  [
-    {
-      "name": "The Poplar suede sofa",
-      "description": "A timeless design, with premium materials features as one of our most popular and iconic pieces. The dandy chair is perfect for any stylish living space with beech legs and lambskin leather upholstery.",
-      "image": "https://cdn.sanity.io/images/ri847jqu/production/9b6a4fc8c65bbb4e5793fb0e1116b510d73dc9e8-630x375.png",
-      "_id": "65453ffd-e476-4b6b-a388-7e3de1bb632a",
-      "features": [
-          "Premium material",
-          "Handmade upholster",
-          "Quality timeless classic"
-      ],
-      "dimensions": {
-          "width": "110cm",
-          "height": "110cm",
-          "depth": "50cm"
-      },
-      "category": {
-          "name": "Tableware",
-          "slug": "tableware"
-      },
-      "price": 980,
-      "tags": [
-          "popular products"
-      ]
-    }
-  ]
-  ```
+- **Product Catalog**: Browse a wide range of products, including detailed information, prices, and images.
+- **Shopping Cart**: Add products to the cart, update quantities, and remove items.
+- **Checkout Process**: Proceed to checkout and review order details.
+- **Responsive Design**: Optimized for mobile, tablet, and desktop devices.
+- **Admin Panel**: Manage product listings and content with Sanity Studio.
+- **Search Functionality**: Search for products by name or category.
+- **Error Handling**: Clear error messages and handling for missing or incorrect data.
 
-## 3. Sanity CMS Schemas
+## Technologies Used
 
-### 3.1 Product Schema
+- **Frontend**:
+  - Next.js (React Framework)
+  - TypeScript
+  - Tailwind CSS (for styling)
+  - Sanity (Content Management System)
+  - ShadCN UI (for UI components)
+  - Lucide Icons (for icons)
 
-This schema represents individual products in the Sanity CMS.
+- **Backend**:
+  - Sanity (Headless CMS for product management)
+  - Vercel (for deployment)
 
-#### Schema Definition:
+## Folder structure
 
-```javascript
-export default {
-  name: 'product',
-  type: 'document',
-  fields: [
-    {
-      name: 'name',
-      type: 'string',
-      title: 'Product Name',
-    },
-    {
-      name: 'price',
-      type: 'number',
-      title: 'Price',
-    },
-    {
-      name: 'images',
-      type: 'array',
-      of: [{type: 'image'}],
-      title: 'Product Images',
-    },
-    {
-      name: 'slug',
-      type: 'slug',
-      title: 'Slug',
-      options: {
-        source: 'name',
-        maxLength: 200,
-      },
-    },
-    {
-      name: 'category',
-      type: 'reference',
-      to: [{type: 'category'}],
-      title: 'Category',
-    },
-  ],
-};
-```
-
-### 3.2 Category Schema
-
-This schema represents the categories of products in the Sanity CMS.
-
-#### Schema Definition:
-
-```javascript
-export default {
-  name: 'category',
-  type: 'document',
-  fields: [
-    {
-      name: 'name',
-      type: 'string',
-      title: 'Category Name',
-    },
-    {
-      name: 'description',
-      type: 'text',
-      title: 'Description',
-    },
-  ],
-};
-```
-
-## 4. Data Mapping and Posting
-
-### 4.1 Data Mapping
-
-The data fetched from the API was mapped to the corresponding fields in the Sanity schemas:
-
-#### Product Data Mapping:
-
-| API Field  | Sanity Field | Description                            |
-| ---------- | ------------ | -------------------------------------- |
-| `id`       | `_id`        | Unique identifier for the product      |
-| `name`     | `name`       | Product name                           |
-| `price`    | `price`      | Product price                          |
-| `images`   | `images`     | Array of product images                |
-| `slug`     | `slug`       | URL-friendly identifier                |
-| `category` | `category`   | Reference to the category              |
-| `features` | `features`   | Features of the product                |
-| `tags`     | `tags`       | Additional tags for filtering products |
-
-#### Category Data Mapping:
-
-| API Field     | Sanity Field  | Description                        |
-| ------------- | ------------- | ---------------------------------- |
-| `id`          | `_id`         | Unique identifier for the category |
-| `name`        | `name`        | Category name                      |
-| `description` | `description` | Category description               |
-
-### 4.2 Posting Data to Sanity
-
-The following steps were taken to post the fetched data to Sanity:
-
-1. **Fetching Data:** Data was fetched from the API using an asynchronous function.
-2. **Sanity Store Creation:** A store was created, and its “id”, “dataset”, and “token” were passed in the sanity-migration repo provided in the day\_3 hackathon document.
-3. **Connecting with Next.js:** The Sanity store was connected with our Next.js app.
-
-## 5. Conclusion
-
-The product and category data fetched from the API have been successfully mapped and posted to Sanity CMS. This ensures a dynamic and scalable data management system for the aesthetic products marketplace.
+/avion-ecommerce
+├── /components                  
+│   ├── CartContext.tsx          # Used in the entire application for cart state 
+│   ├── NewArrivals.tsx          # Used on the landing page
+│   ├── Navbar.tsx               # Navbar component, used in entire application for navigation
+│   ├── Footer.tsx               # Navbar component, used in entire application
+│   ├── HeroSection.tsx          # landing component, used in homepage
+│   ├── RelatedProducts.tsx      # Used Under /product[slug]
+├── /lib                         
+│   └── client.ts                # Sanity client setup, used for fetching data
+├── /pages                       
+│   ├── _app.tsx                 # Global configuration, wraps the entire app (used in all pages)
+│   ├── index.tsx                # / – Home page showing the product list
+│   ├── product/[slug].tsx       # /product/[slug] – Dynamic page for individual product details
+│   ├── [categories]/page.tsx    # /[categories]/page.tsx – Dynamic page for specific category
+│   ├── checkout/page.tsx        # /checkout – Checkout page to review and complete orders
+│   ├── cart/page.tsx            # /cart – Cart page to add items in cart
+├   ├── succes/page.tsx          # renders if the order placed successfully    
+│   └── allproducts/page.tsx     # renders all products from sanity            
+├── /sanity                       
+│   ├── sanity.config.ts         # Sanity configuration file
+│   └── /studio                  # /studio – Sanity Studio content management UI
+├── /styles                       
+│   ├── globals.css              # Global styles (base styles, custom styles)
+└── .env.local                   # Stores local environment variables (e.g., API keys, Sanity project ID)
 

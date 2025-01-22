@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Search, ShoppingCart, UserCircle, Menu, X } from 'lucide-react';
@@ -45,6 +45,7 @@ export default function Navbar() {
 
   return (
     <nav className="border-b">
+      <Suspense>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
@@ -186,6 +187,7 @@ export default function Navbar() {
           </div>
         </div>
       )}
+      </Suspense>
     </nav>
   );
 }

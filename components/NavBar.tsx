@@ -151,7 +151,15 @@ const { isSignedIn } = useUser();
                       ))}
                     </div>
                     <div className="flex flex-col space-y-4">
-                      <UserCircle />
+                    {isSignedIn ? (
+        <UserButton afterSignOutUrl="/" />
+      ) : (
+        <SignInButton mode="modal">
+          <button>
+            <UserCircle className="h-6 w-6 text-gray-600 hover:text-gray-900" />
+          </button>
+        </SignInButton>
+      )}
                       <Link href="/about" className="text-gray-600 border-b border-spacing-1 hover:text-gray-900">About Us</Link>
                       <Link href="/contact" className="text-gray-600 border-b border-spacing-1 hover:text-gray-900">Contact</Link>
                       <Link href="/blog" className="text-gray-600 border-b border-spacing-1 hover:text-gray-900">Blog</Link>

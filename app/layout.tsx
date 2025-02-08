@@ -4,6 +4,9 @@ import "./globals.css";
 import Navbar from "@/components/NavBar";
 import { CartProvider } from "@/components/CartContext";
 import Footer from "@/components/Footer";
+import {
+  ClerkProvider,
+} from '@clerk/nextjs'
 
 
 const poppins = Poppins({ 
@@ -20,16 +23,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <ClerkProvider>
     <html lang="en">
       <body className={`${poppins.className} antialiased`}>
         <CartProvider>
           <Navbar />
           <main className="mx-auto max-w-2xl py-5 px-4 sm:px-6 lg:max-w-7xl">
+           
             {children}
           </main>
           <Footer />
         </CartProvider>
       </body>
     </html>
+    </ClerkProvider>
   );
 }

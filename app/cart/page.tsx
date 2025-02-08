@@ -7,10 +7,20 @@ import Link from "next/link";
 import { CartItem } from "../interface";
 import { useRouter } from "next/navigation";
 import { ChevronUp, ChevronDown } from "lucide-react";
+import { useUser } from "@clerk/nextjs"; // Import Clerk's useUser hook
+import { useEffect } from "react"; // Import useEffect
 
 export default function CartPage() {
   const { cart, removeFromCart, clearCart, updateQuantity } = useCart();
   const router = useRouter();
+  const { isSignedIn } = useUser(); // Get the user's sign-in status
+
+  // Use useEffect to clear the cart only once when the user is not signed in
+  useEffect(() => {
+    if (!isSignedIn) {
+      clearCart();
+    }
+  }, [isSignedIn, clearCart]); // The effect will run only when isSignedIn changes
 
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
@@ -118,11 +128,7 @@ export default function CartPage() {
             Clear Cart
           </Button>
           <Button
-            className={`w-full sm:w-auto ${
-              cart.length === 0
-                ? "bg-gray-300 text-gray-600"
-                : "bg-green-500 text-white hover:bg-green-600"
-            }`}
+            className={`w-full sm:w-auto ${cart.length === 0 ? "bg-gray-300 text-gray-600" : "bg-green-500 text-white hover:bg-green-600"}`}
             disabled={cart.length === 0}
             onClick={handleCheckoutClick}
           >

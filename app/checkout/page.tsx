@@ -23,6 +23,9 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Separator } from "@/components/ui/separator"
 import { CreditCard, ShoppingCart, Truck } from 'lucide-react'
 import { useToast } from "@/hooks/use-toast"
+import { v4 as uuidv4 } from "uuid";
+import { client } from "@/lib/client"; // Ensure correct path to sanity client
+
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -57,6 +60,12 @@ export default function CheckoutPage() {
   const router = useRouter()
   const [isProcessing, setIsProcessing] = useState(false)
 
+  useEffect(() => {
+    if (cart.length === 0) {
+      router.replace("/"); // Redirect users with an empty cart
+    }
+  }, [cart, router]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -73,37 +82,59 @@ export default function CheckoutPage() {
 
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
 
-  useEffect(() => {
-    if (cart.length === 0) {
-      router.push("/order/success")
-    }
-  }, [cart, router])
+
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      setIsProcessing(true)
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      // Simulate a successful order
+      setIsProcessing(true);
+  
+      // Generate unique Order ID
+      const orderId = uuidv4();
+  
+      // Create an order object
+      const orderData = {
+        _type: "order",
+        orderId: orderId, // Store generated Order ID
+        customerName: values.name,
+        address: values.address,
+        city: values.city,
+        postalCode: values.postalCode,
+        country: values.country,
+        cardNumber: values.cardNumber.slice(-4), // Store only last 4 digits for security
+        totalPrice: total,
+        items: cart.map((item) => ({
+          _type: "reference",
+          _ref: item.id, // Assuming product ID is stored as `_id` in Sanity
+        })),
+        status: "Pending",
+        createdAt: new Date().toISOString(), // Store order timestamp
+      };
+  
+      // Post the order to Sanity
+      await client.create(orderData);
+  
+      // Show success message
       toast({
         title: "Order Successful",
-        description: "Your order has been placed successfully.",
+        description: `Your order (#${orderId}) has been placed successfully.`,
         duration: 5000,
-      })
-      clearCart()
-      router.push("/order/success")
+      });
+  
+      // Clear the cart and redirect
+      clearCart();
+      router.push(`/order/success?orderId=${orderId}`); // Pass Order ID to Success Page
     } catch (error) {
-      console.error("Checkout error:", error)
+      console.error("Checkout error:", error);
       toast({
         title: "Checkout Failed",
         description: "There was an error processing your order. Please try again.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsProcessing(false)
+      setIsProcessing(false);
     }
   }
+  
 
   return (
     <div className="container mx-auto lg:max-w-3xl px-4 py-8">

@@ -1,14 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  imageUrl: string;
-}
+import { useUser } from "@clerk/clerk-react"; // To get user info from Clerk
+import { CartItem } from "@/app/interface"; // Assuming you have a CartItem interface
 
 interface CartContextType {
   cart: CartItem[];
@@ -21,9 +15,10 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
+  const { user } = useUser(); // Use Clerk's useUser hook to get user details
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  // Load and sync cart with localStorage
+  // Load cart from localStorage if available
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedCart = localStorage.getItem("cart");
@@ -33,13 +28,19 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  // Sync cart to localStorage
   useEffect(() => {
     if (typeof window !== "undefined") {
       localStorage.setItem("cart", JSON.stringify(cart));
     }
   }, [cart]);
 
+  // Only allow adding items to the cart if the user is logged in
   const addToCart = (item: CartItem) => {
+    if (!user) {
+      console.log("You need to be logged in to add items to the cart.");
+      return; // Prevent adding to cart if not logged in
+    }
     setCart((prevCart) => {
       const existingItem = prevCart.find((cartItem) => cartItem.id === item.id);
       if (existingItem) {

@@ -14,6 +14,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useCart } from "@/components/CartContext"; // Ensure this is correctly implemented
+import { UserButton, SignInButton, SignUpButton, useUser } from "@clerk/nextjs";
 
 const links = [
   { name: "Pots", href: "/Pots" },
@@ -24,6 +25,8 @@ const links = [
   { name: "Cutlery", href: "/Cutlery" },
   { name: "Tableware", href: "/Tableware" },
 ];
+ // Get user authentication state
+
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -44,7 +47,7 @@ export default function Navbar() {
       setIsSearchOpen(false);
     }
   };
-
+const { isSignedIn } = useUser();
   return (
     <div>
       <div className="border-b">
@@ -89,9 +92,15 @@ export default function Navbar() {
                   </div>
                 </Link>
               </Button>
-              <Button variant="ghost" size="icon">
-                <UserCircle className="h-5 w-5" />
-              </Button>
+              {isSignedIn ? (
+        <UserButton afterSignOutUrl="/" />
+      ) : (
+        <SignInButton mode="modal">
+          <button>
+            <UserCircle className="h-6 w-6 text-gray-600 hover:text-gray-900" />
+          </button>
+        </SignInButton>
+      )}
             </div>
             <div className="flex md:hidden">
               <Button

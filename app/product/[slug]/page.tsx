@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Star, Truck } from 'lucide-react';
+import { Star, Truck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { client } from "@/lib/client";
-import RelatedProducts from "@/components/RelatedProducts"; // Import the new component
+import RelatedProducts from "@/components/RelatedProducts";
 import { fullProduct } from "@/app/interface";
 import { useCart } from "@/components/CartContext";
+import { useUser, SignInButton } from "@clerk/nextjs"; // Import Clerk hooks
 
 async function getProductData(slug: string) {
   const query = `{
@@ -32,10 +33,10 @@ export const dynamic = "force-dynamic";
 
 export default function ProductPage({ params }: { params: { slug: string } }) {
   const [productData, setProductData] = useState<{ product: fullProduct } | null>(null);
-  const [quantity, setQuantity] = useState(1); // Quantity for the current product
+  const [quantity, setQuantity] = useState(1);
   const { cart, addToCart } = useCart();
+  const { isSignedIn } = useUser(); // Check if the user is signed in
 
-  // Fetch product data on initial load and when slug changes
   useEffect(() => {
     async function fetchData() {
       try {
@@ -69,8 +70,12 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
     );
   }
 
-  // Function to handle adding to cart
   const handleAddToCart = () => {
+    if (!isSignedIn) {
+      alert("Please sign in to add items to your cart.");
+      return;
+    }
+
     const existingItem = cart.find((item) => item.id === product._id);
 
     if (!existingItem) {
@@ -78,7 +83,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         id: product._id,
         name: product.name,
         price: product.price,
-        quantity, // Use the updated quantity state
+        quantity,
         imageUrl: product.imageUrl,
       });
       alert("Added to cart successfully");
@@ -87,7 +92,6 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
     }
   };
 
-  // Functions to adjust quantity
   const increaseQuantity = () => {
     if (quantity < product.quantity) {
       setQuantity((prev) => prev + 1);
@@ -137,24 +141,14 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
             </div>
 
             <div className="flex items-center gap-4 mb-4">
-              <Button
-                onClick={decreaseQuantity}
-                className="bg-gray-200 text-gray-800 hover:bg-gray-300"
-                disabled={quantity === 1}
-              >
+              <Button onClick={decreaseQuantity} className="bg-gray-200 text-gray-800 hover:bg-gray-300" disabled={quantity === 1}>
                 -
               </Button>
               <span className="text-lg font-bold text-gray-800">{quantity}</span>
-              <Button
-                onClick={increaseQuantity}
-                className="bg-gray-200 text-gray-800 hover:bg-gray-300"
-                disabled={quantity === product.quantity}
-              >
+              <Button onClick={increaseQuantity} className="bg-gray-200 text-gray-800 hover:bg-gray-300" disabled={quantity === product.quantity}>
                 +
               </Button>
-              <div className="text-sm text-gray-500">
-                {product.quantity} item(s) in stock
-              </div>
+              <div className="text-sm text-gray-500">{product.quantity} item(s) in stock</div>
             </div>
 
             <div className="mb-4">
@@ -166,36 +160,36 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                   ${(product.price * quantity * 2).toFixed(2)}
                 </span>
               </div>
-              <span className="text-sm text-gray-500">
-                Incl. VAT plus shipping
-              </span>
+              <span className="text-sm text-gray-500">Incl. VAT plus shipping</span>
             </div>
 
             <div className="mb-6 flex items-center gap-2 text-gray-500">
               <Truck className="w-6 h-6" />
               <span className="text-sm">2-4 Day Shipping</span>
             </div>
+
             <div className="flex gap-3">
-              <Button
-                size="lg"
-                className="bg-green-400 text-white hover:bg-green-200"
-                onClick={handleAddToCart}
-              >
-                Add to Cart
-              </Button>
+              {isSignedIn ? (
+                <Button size="lg" className="bg-green-400 text-white hover:bg-green-200" onClick={handleAddToCart}>
+                  Add to Cart
+                </Button>
+              ) : (
+                <SignInButton mode="modal">
+                  <Button size="lg" className="bg-green-400 text-white hover:bg-green-200">
+                    Add to Cart
+                  </Button>
+                </SignInButton>
+              )}
 
               <Button size="lg" className="text-white border-white hover:bg-green/10">
                 Buy Now
               </Button>
             </div>
 
-            <p className="mt-8 text-base text-gray-500 tracking-wide">
-              {product.description}
-            </p>
+            <p className="mt-8 text-base text-gray-500 tracking-wide">{product.description}</p>
           </div>
         </div>
 
-        {/* Use the RelatedProducts component */}
         <RelatedProducts categoryName={product.categoryName} currentSlug={product.slug} />
       </div>
     </div>

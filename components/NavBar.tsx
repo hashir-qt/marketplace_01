@@ -36,9 +36,8 @@ export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // Safeguard to prevent errors if cart is undefined or null
-  const cartItemCount = Array.isArray(cart)
-    ? cart.reduce((acc, item) => acc + item.quantity, 0)
-    : 0;
+  // Show number of unique items in the cart (not total quantity)
+  const cartItemCount = Array.isArray(cart) ? cart.length : 0;
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -151,15 +150,15 @@ const { isSignedIn } = useUser();
                       ))}
                     </div>
                     <div className="flex flex-col space-y-4">
-                    {isSignedIn ? (
-        <UserButton afterSignOutUrl="/" />
-      ) : (
-        <SignInButton mode="modal">
-          <button>
-            <UserCircle className="h-6 w-6 text-gray-600 hover:text-gray-900" />
-          </button>
-        </SignInButton>
-      )}
+                      {isSignedIn ? (
+                        <UserButton afterSignOutUrl="/" />
+                      ) : (
+                        <SignInButton mode="modal">
+                          <button>
+                            <UserCircle className="h-6 w-6 text-gray-600 hover:text-gray-900" />
+                          </button>
+                        </SignInButton>
+                      )}
                       <Link href="/about" className="text-gray-600 border-b border-spacing-1 hover:text-gray-900">About Us</Link>
                       <Link href="/contact" className="text-gray-600 border-b border-spacing-1 hover:text-gray-900">Contact</Link>
                       <Link href="/blog" className="text-gray-600 border-b border-spacing-1 hover:text-gray-900">Blog</Link>

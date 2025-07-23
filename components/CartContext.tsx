@@ -1,9 +1,20 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { useUser } from "@clerk/clerk-react"; // To get user info from Clerk
-import { CartItem } from "@/app/interface"; // Assuming you have a CartItem interface
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode
+} from "react";
+import { useUser } from "@clerk/clerk-react"; // Clerk authentication
+import { CartItem } from "@/app/interface";
 
+// Constant for localStorage key
+const LOCAL_STORAGE_KEY = "cart";
+
+// Cart context type definition
 interface CartContextType {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
@@ -12,64 +23,81 @@ interface CartContextType {
   clearCart: () => void;
 }
 
+// Create the CartContext
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+// CartProvider component to wrap your app
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useUser(); // Use Clerk's useUser hook to get user details
+  const { user } = useUser();
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  // Load cart from localStorage if available
+  // Load cart from localStorage on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedCart = localStorage.getItem("cart");
-      if (storedCart) {
-        setCart(JSON.parse(storedCart));
+      try {
+        const storedCartJSON = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (storedCartJSON) {
+          setCart(JSON.parse(storedCartJSON));
+        }
+      } catch (error) {
+        console.error("Failed to load cart from localStorage:", error);
       }
     }
   }, []);
 
-  // Sync cart to localStorage
+  // Sync cart to localStorage whenever it changes
   useEffect(() => {
     if (typeof window !== "undefined") {
-      localStorage.setItem("cart", JSON.stringify(cart));
+      try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(cart));
+      } catch (error) {
+        console.error("Failed to save cart to localStorage:", error);
+      }
     }
   }, [cart]);
 
-  // Only allow adding items to the cart if the user is logged in
-  const addToCart = (item: CartItem) => {
+  // Add an item to the cart (only if user is logged in)
+  const addToCart = useCallback((item: CartItem) => {
     if (!user) {
+      // TODO: Replace with UI notification/toast
       console.log("You need to be logged in to add items to the cart.");
-      return; // Prevent adding to cart if not logged in
+      return;
     }
     setCart((prevCart) => {
       const existingItem = prevCart.find((cartItem) => cartItem.id === item.id);
       if (existingItem) {
+        // Update quantity if item already exists
         return prevCart.map((cartItem) =>
           cartItem.id === item.id
             ? { ...cartItem, quantity: cartItem.quantity + item.quantity }
             : cartItem
         );
       }
+      // Add new item
       return [...prevCart, item];
     });
-  };
+  }, [user]);
 
-  const removeFromCart = (id: string) => {
+  // Remove an item from the cart by ID
+  const removeFromCart = useCallback((id: string) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
-  };
+  }, []);
 
-  const updateQuantity = (id: string, quantity: number) => {
+  // Update the quantity of a specific item
+  const updateQuantity = useCallback((id: string, quantity: number) => {
     setCart((prevCart) =>
       prevCart.map((item) =>
-        item.id === id ? { ...item, quantity } : item
+        item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item
       )
     );
-  };
+  }, []);
 
-  const clearCart = () => {
+  // Clear the entire cart
+  const clearCart = useCallback(() => {
     setCart([]);
-  };
+  }, []);
 
+  // Provide cart state and actions to children
   return (
     <CartContext.Provider
       value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart }}
@@ -79,6 +107,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// Custom hook to use the cart context
 export const useCart = (): CartContextType => {
   const context = useContext(CartContext);
   if (!context) {
